@@ -1,5 +1,4 @@
-from sqlalchemy import create_engine, MetaData, \
-    Column, Integer, Numeric, String, Date, Table, ForeignKey, BOOLEAN
+from sqlalchemy import create_engine, MetaData, Column, Integer, String, Date, Table, ForeignKey, BOOLEAN
 
 engine = create_engine(
     "postgresql://ily:root@localhost:5432/fakedata"
