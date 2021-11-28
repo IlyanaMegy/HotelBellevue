@@ -43,7 +43,7 @@ LIMIT
     4
 
 
--- 1.3 -> Réduction de 0.25% sur le prix total
+-- 1.4 -> Réduction de 0.25% sur le prix total
 SELECT
     *,
     Round(
@@ -231,8 +231,49 @@ WHERE
 -- 8 Lister tous les pays de la base de données (dans les tables employee, order, customer),
 -- indiquer pour chaque pays le nombre de lignes correspondantes dans toute la base de données.
 -- (Chaque pays ne doit pas appara î tre en doublon)
+
+-- 1/ Je créé la table `AllCountries`
+CREATE TABLE AllCountries ("Country" VARCHAR(8000));
+
+-- 2/ J'avoute à la table les pays présents dans les tables `Customer` et `Supplier` 
+--    qui contiennent à eux deux la totalité des pays de la base de données  
+INSERT INTO
+    "AllCountries"
 SELECT
-    DISTINCT *
+    DISTINCT "Country"
 FROM
-    "Customer"
-    join "Supplier"
+    "Supplier";
+      
+INSERT INTO
+    "AllCountries"
+SELECT
+    DISTINCT "Country"
+FROM
+    "Customer";
+    
+
+-- 3/ Je checke les doublons
+SELECT   COUNT(*) AS nbr_doublon, "Country"
+FROM     "AllCountries"
+GROUP BY "Country"
+HAVING   COUNT(*) > 1;
+
+
+-- 4/ Je les supprime
+DELETE FROM
+    "AllCountries"
+WHERE
+    rowid IN (
+        SELECT
+            MAX(rowid)
+        FROM
+            "AllCountries"
+        GROUP BY
+            "Country"
+        HAVING
+            COUNT(*) > 1
+    );
+
+
+-- SELECT rowid,* FROM "AllCountries";
+-- drop table "AllCountries";
